@@ -1,0 +1,112 @@
+{
+  "Débat":
+  {
+    "debate_intro": [{"role": "system", "content": "Tu es un assistant de débat."}],
+    "champs": [
+      {"sujet": {
+    "context":["debate_intro"],
+      "question":"Ce débat donne les arguments pour et contre quoi ? Complète le titre \"Arguments pour et contre X\". Donne juste la réponse sans baratin. Exemple pour \"Dieu existe-il ?\" : \"Arguments pour et contre l'existence de Dieu\"."
+  }},
+      {"introduction":
+    {"context":["debate_intro"],
+      "question":"Peux-tu rédiger une courte introduction à ce débat ? Cette introduction doit donner les éléments utiles pour comprendre le débat. Elle doit être découpée en moins de 5 rubriques (définition, contexte, actualité du débat si c'est le cas, enjeux du débat, etc.), chacune définie par un titre.  Peux-tu développer chaque point un paragraphe d'environ 400 caractères ? Ne nuance pas, présente simplement les thèses.?"
+    }},
+      {"articles-Wikipédia": {
+      "context":["debate_intro","introduction"],
+      "question":"Quels articles Wikipédia permettent de compléter cette introduction ? Ces articles doivent réellement exister sur la version française de Wikipédia."
+    }},
+      {"arguments-pour": {
+    "context":["debate_intro"],
+      "question":"Donne-moi une liste de tous les arguments \"pour\" du débat."
+  }},
+      {"arguments-pour-titre-affiché": {
+    "context":["debate_intro", "arguments-pour"],
+      "question":"Résume chaque argument en une phrase très très courte de l'ordre de 50 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "
+  }},
+      {"arguments-pour-page": {
+    "context":["debate_intro", "arguments-pour"],
+      "question":"Résume chaque argument en une phrase courte de l'ordre de 100 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. La phrase doit mentionner le sujet du débat (par exemple, pour le débat \"Faut-il instaurer un revenu de base ?\", il faut mentionner dans la phrase \"revenu de base\"). Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "
+  }},
+      {"arguments-contre": {
+    "context":["debate_intro"],
+      "question":"Donne-moi une liste de tous les arguments \"contre\" du débat."
+  }},
+      {"arguments-contre-titre-affiché": {
+    "context":["debate_intro", "arguments-contre"],
+      "question":"Résume chaque argument en une phrase très très courte de l'ordre de 50 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "
+   }},
+       {"arguments-contre-page": {
+    "context":["debate_intro", "arguments-contre"],
+      "question":"Résume chaque argument en une phrase courte de l'ordre de 100 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. La phrase doit mentionner le sujet du débat (par exemple, pour le débat \"Faut-il instaurer un revenu de base ?\", il faut mentionner dans la phrase \"revenu de base\"). Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "
+ }},
+      {"rubriques": {
+    "context":["debate_intro"],
+      "question":"Voici des rubriques thématiques : Aménagement Culture Droit Écologie Économie Éducation Éthique Géopolitique Histoire Philosophie Politique Psychologie Religion et spiritualité Santé Science Société Sport et loisirs Technologie. À quelles rubriques appartient au débat ? Réponds en donnant seulement le nom de ces rubriques, écrites en commençant chacune par une majuscule, et séparées par une virgule, par ordre alphabétique."
+  }},
+      {"mots-clés": {
+    "context":["debate_intro"],
+      "question":"Peux-tu donner une série de mots-clés pour le débat (pas plus de 7 mots-clés)? Écris-les en minuscules."
+  }}
+      ]
+  },
+  "Argument":
+  {
+    "champs":
+    [
+      {"résumé": {
+      "context": ["argument_intro"],
+      "question": "Peux-tu développer en 400 caractères environ l'argument ? Va à l'essentiel, sans baratin. Ne nuance pas l'argument (ne fais pas de concessions)."
+    }},
+      {"justifications": {
+      "context": ["argument_intro", "résumé"],
+      "question": "Quels sont les arguments spécifiques qui confirment (et seulement ceux qui confirment, pas ceux qui contredisent) l'argument. Présente-moi ta réponse sous forme d'une liste numérotée."
+    }},
+       {"justifications-titre-affiché": {
+    "context":["argument_intro", "résumé","justifications"],
+      "question":"Résume chaque argument en une phrase très très courte de l'ordre de 50 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "
+  }},
+      {"justifications-page": {
+    "context":["argument_intro", "résumé","justifications"],
+      "question":"Résume chaque argument en une phrase courte de l'ordre de 100 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. La phrase doit mentionner le sujet du débat (par exemple, pour le débat \"Faut-il instaurer un revenu de base ?\", il faut mentionner dans la phrase \"revenu de base\"). Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "
+ }},
+      {"justifications-résumé": {
+    "context":["argument_intro", "résumé","justifications"],
+      "question":"Peux-tu développer en 400 caractères environ chaque argument ? Va à l'essentiel, sans baratin. Ne nuance pas l'argument (ne fais pas de concessions). "
+ }},
+      {"objections": {
+      "context": ["argument_intro", "résumé"],
+      "question": "Quelles sont les objections spécifiques à l'argument. Présente-moi ta réponse sous forme d'une liste numérotée. "
+      }},
+
+     {"objections-titre-affiché": {
+    "context":["argument_intro", "résumé","objections"],
+      "question":"Résume chaque argument en une phrase très très courte de l'ordre de 50 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "
+  }},
+       {"objections-page": {
+    "context":["argument_intro", "résumé","objections"],
+      "question":"Résume chaque argument en une phrase courte de l'ordre de 100 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. La phrase doit mentionner le sujet du débat (par exemple, pour le débat \"Faut-il instaurer un revenu de base ?\", il faut mentionner dans la phrase \"revenu de base\"). Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "
+ }},
+      {"objections-résumé": {
+    "context":["argument_intro", "résumé","objections"],
+      "question":"Peux-tu développer en 400 caractères environ chaque argument ? Va à l'essentiel, sans baratin. Ne nuance pas l'argument (ne fais pas de concessions). "
+ }},
+      {"page": {
+      "context": ["argument_intro", "résumé"],
+      "question": "Résume l'argument en une phrase courte de l'ordre de 100 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. La phrase doit mentionner le sujet du débat (par exemple, pour le débat \"Faut-il instaurer un revenu de base ?\", il faut mentionner dans la phrase \"revenu de base\"). Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "
+    }},
+
+      {"titre-affiché": {
+      "context": ["argument_intro", "résumé"],
+      "question": "Résume l'argument en une phrase très très courte de l'ordre de 50 caractères qui donne l'idée clé de l'argument. Cette phrase doit être rédigée sous forme sujet-verbe-complément et contenir les articles. Ce n'est pas grave si tu n'es pas assez précis. Par contre, la phrase doit avoir un verbe conjugué. "    }},
+
+      {"mots-clés": {
+    "context":["argument_intro", "résumé"],
+      "question":"Peux-tu donner une série de mots-clés pour l'argument (pas plus de 7 mots-clés) ? Écris-les en minuscules."
+  }},
+      {"rubriques": {
+    "context":["argument_intro", "résumé"],
+      "question":"Voici des rubriques thématiques : Aménagement Culture Droit Écologie Économie Éducation Éthique Géopolitique Histoire Philosophie Politique Psychologie Religion et spiritualité Santé Science Société Sport et loisirs Technologie. Quelles rubriques appartient a l'argument ? Réponds en donnant seulement le nom de ces rubriques, écrites en commençant chacune par une majuscule, et séparées par une virgule, par ordre alphabétique."
+  }}
+      ]
+  }
+}
