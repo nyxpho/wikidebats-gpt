@@ -10,7 +10,9 @@ def retrieve_list(content, remove_dot = True, remove_column=True):
     list_args = []
     while index != -1:
         end_arg = content.find("\n", index)
-        argument = content[index+2:end_arg].strip()
+        if end_arg == -1:
+            end_arg = len(content)
+        argument = content[index + len(str(count))+2:end_arg].strip()
         if argument.find(".")==len(argument)-1 and remove_dot:
             argument = argument[:-1]
         if argument.find(":") and remove_column:
@@ -22,9 +24,9 @@ def retrieve_list(content, remove_dot = True, remove_column=True):
         index = content.find(to_find, beginning)
 
     return list_args
-
 if __name__ == '__main__':
     pysite = pywikibot.Site("fr", 'wikidebates')
+    wikipedia = pywikibot.Site("fr", 'wikipedia')
     wikicode = "{{Débat\n|avancement=Débat en construction\n|avertissements-débat=ChatGPT\n"
     model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
     debate_name = sys.argv[1]
@@ -35,7 +37,7 @@ if __name__ == '__main__':
 
     arguments = list(content["Arguments"].keys())
 
-    print(len(arguments))
+    print("We will create "+ str(len(arguments)) +" arguments. ")
     paraphrases = util.paraphrase_mining(model, arguments)
     sorted_tuples = sorted(paraphrases, key=lambda x: x[0], reverse=True)
     tuple = sorted_tuples[0]
@@ -51,7 +53,7 @@ if __name__ == '__main__':
             content["Arguments"][arguments[tuple[1]]]["redirect"] = arguments[tuple[1]]
         else:
             content["Arguments"][arguments[tuple[2]]]["redirect"] = arguments[tuple[1]]
-        print("added redirect\n " + arguments[tuple[1]] + "\n, "+ arguments[tuple[2]])
+        print("Added redirect as similarity between arguments is larger than threshold: \n " + arguments[tuple[1]] + "\n"+ arguments[tuple[2]])
         c_int+=1
         tuple = sorted_tuples[c_int]
         #print(content["Arguments"])
@@ -72,21 +74,28 @@ if __name__ == '__main__':
             list_parts = retrieve_list(element["reponse"], remove_column=False)
             for part in list_parts:
                 sep = part.find(":")
-                article = "{{Article Wikipédia\n|page=" + part[0:sep].strip() + "\n}}"
-                articles_wiki += article
-            wikicode += "|articles-Wikipédia=" + articles_wiki + "\n"
+                title_wiki = part[0:sep].strip()
+                page_wiki = pywikibot.Page(wikipedia, title_wiki)
+                if page_wiki.exists():
+                    article = "{{Article Wikipédia\n|page=" + title_wiki + "\n}}"
+                    articles_wiki += article
+            if len(articles_wiki):
+                wikicode += "|articles-Wikipédia=" + articles_wiki + "\n"
 
         if key == "rubriques":
             reponse = element["reponse"]
-            wikicode+="|rubriques=" + reponse.strip()+"\n"
+            if len(reponse):
+                wikicode+="|rubriques=" + reponse.strip()+"\n"
 
         if key == "mots-clés":
             reponse = element["reponse"]
-            wikicode += "|mots-clés=" + reponse.strip() + "\n"
+            if len(reponse):
+                wikicode += "|mots-clés=" + reponse.strip() + "\n"
 
         if key == "sujet":
             reponse = element["reponse"]
-            wikicode += "|sujet=" + reponse[len("Arguments pour et contre "):-1].strip() + "\n"
+            if len(reponse):
+                wikicode += "|sujet=" + reponse[len("Arguments pour et contre "):-1].strip() + "\n"
 
         arguments = content["Arguments"]
         for_arguments=""
@@ -94,9 +103,11 @@ if __name__ == '__main__':
             list_parts = retrieve_list(element["reponse"])
             for part in list_parts:
                 arg = arguments[part]
-                #print(arg)
-                argument = "{{Argument pour\n|page=" + arg["page"]["reponse"].strip() + \
-                           "\n|titre-affiché=" +arg["page"]["reponse"].strip()  + "\n}}"
+                title = arg["page"]["reponse"].strip()
+                if title.find(".") == len(title) - 1:
+                    title = title[:-1]
+                argument = "{{Argument pour\n|page=" + title + \
+                           "\n|titre-affiché=" + title + "\n}}"
                 for_arguments+=argument
             wikicode += "|arguments-pour=" + for_arguments + "\n"
         against_arguments = ""
@@ -104,15 +115,18 @@ if __name__ == '__main__':
             list_parts = retrieve_list(element["reponse"])
             for part in list_parts:
                 arg = arguments[part]
-                argument = "{{Argument contre\n|page=" + arg["page"]["reponse"].strip() + \
-                           "\n|titre-affiché=" + arg["page"]["reponse"].strip() + "\n}}"
+                title = arg["page"]["reponse"].strip()
+                if title.find(".") == len(title) - 1:
+                    title = title[:-1]
+                argument = "{{Argument contre\n|page=" + title + \
+                           "\n|titre-affiché=" + title + "\n}}"
                 against_arguments += argument
             wikicode += "|arguments-contre=" + against_arguments + "\n"
 
     wikicode+="}}"
     print("finished debate")
     page = pywikibot.Page(pysite, debate_name)
-    if True:
+    if not page.exists():
         page.text = wikicode
         page.save("ChatGPT created debate")
 
@@ -127,11 +141,16 @@ if __name__ == '__main__':
             argument = content["Arguments"][key]
 
         title = argument["page"]["reponse"]
+        if title.find(".") == len(title) - 1:
+            title = title[:-1]
         page = pywikibot.Page(pysite, title)
-        if True:
+        if not page.exists():
             wikicode_argument = "{{Argument\n"
             if "résumé" in argument:
-                wikicode_argument+="|résumé="+argument["résumé"]["reponse"]+"\n"
+                c_resume = argument["résumé"]["reponse"]
+                if c_resume[-1]!='.':
+                    c_resume+="."
+                wikicode_argument+="|résumé="+c_resume+"\n"
             if "mots-clés" in argument:
                 wikicode_argument+="|mots-clés="+argument["mots-clés"]["reponse"]+"\n"
             if "rubriques" in argument:

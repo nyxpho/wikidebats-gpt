@@ -92,7 +92,9 @@ def retrieve_list(content, remove_dot = True, remove_column=True):
     list_args = []
     while index != -1:
         end_arg = content.find("\n", index)
-        argument = content[index+2:end_arg].strip()
+        if end_arg == -1:
+            end_arg = len(content)
+        argument = content[index + len(str(count))+2:end_arg].strip()
         if argument.find(".")==len(argument)-1 and remove_dot:
             argument = argument[:-1]
         if argument.find(":") and remove_column:
